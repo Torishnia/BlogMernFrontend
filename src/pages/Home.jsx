@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Grid from '@mui/material/Grid';
@@ -7,11 +8,14 @@ import axios from '../axios';
 import { Post } from '../components/Post';
 import { TagsBlock } from '../components/TagsBlock';
 import { CommentsBlock } from '../components/CommentsBlock';
+import { fetchPosts } from '../redux/slices/posts';
 
 export const Home = () => {
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    axios.get('/posts');
-  }, []);
+    dispatch(fetchPosts());
+  }, [dispatch]);
 
   return (
     <>
