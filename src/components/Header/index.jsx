@@ -32,16 +32,16 @@ export const Header = () => {
                   <Button variant="contained">Create an article</Button>
                 </Link>
                 <Button onClick={onClickLogout} variant="contained" color="error">
-                  Log out
+                  Log Out
                 </Button>
               </>
             ) : (
               <>
                 <Link to="/login">
-                  <Button variant="outlined">Log in</Button>
+                  <Button variant="outlined">Login</Button>
                 </Link>
                 <Link to="/register">
-                  <Button variant="contained">Create account</Button>
+                  <Button variant="contained">Create an account</Button>
                 </Link>
               </>
             )}
