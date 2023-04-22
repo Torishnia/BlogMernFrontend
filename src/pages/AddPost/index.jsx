@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
@@ -12,8 +12,10 @@ import axios from '../../axios';
 import styles from './AddPost.module.scss';
 
 export const AddPost = () => {
+  const navigate = useNavigate();
   const isAuth = useSelector(selectIsAuth);
-  const [value, setValue] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [text, setText] = useState('');
   const [title, setTitle] = useState('');
   const [tags, setTags] = useState('');
   const [imageUrl, setImageUrl] = useState('');
@@ -35,8 +37,30 @@ export const AddPost = () => {
   const onClickRemoveImage = () => setImageUrl('');
 
   const onChange = useCallback((value) => {
-    setValue(value);
+    setText(value);
   }, []);
+
+  const onSubmit = async () => {
+    try {
+      setIsLoading(true);
+
+      const fields = {
+        title,
+        text,
+        imageUrl,
+        tags,
+      };
+
+      const { data } = await axios.post('/posts', fields);
+
+      const id = data._id;
+
+      navigate(`/posts/${id}`);
+    } catch (err) {
+      console.warn(err);
+      alert('Error creating article!');
+    }
+  }
 
   const options = useMemo(
     () => ({
@@ -89,9 +113,9 @@ export const AddPost = () => {
         onChange={(e) => setTags(e.target.value)}
         fullWidth 
       />
-      <SimpleMDE className={styles.editor} value={value} onChange={onChange} options={options} />
+      <SimpleMDE className={styles.editor} value={text} onChange={onChange} options={options} />
       <div className={styles.buttons}>
-        <Button size="large" variant="contained">
+        <Button onClick={onSubmit} size="large" variant="contained">
           Publish
         </Button>
         <a href="/">
